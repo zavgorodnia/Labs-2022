@@ -1,0 +1,52 @@
+---
+title: "Lab1 by Daria Zavgorodnia"
+output:
+  html_document:
+    df_print: paged
+---
+
+
+## 1. За допомогою download.file() завантажте любий excelфайл з порталу http://data.gov.ua та зчитайте його (xls, xlsx – бінарні формати, тому встановить mode = “wb”. Виведіть перші 6 строк отриманого фрейму даних.
+```{r}
+download.file('https://data.gov.ua/dataset/92c11c7c-96be-4e34-bd19-06d289b00b0a/resource/87b0b9d1-1474-483a-aab1-9295dcfb09ac/download/reg_2021-10-29_d.xlsx', destfile = "./data.xlsx",mode = "wb")
+```
+
+```{r}
+data1=read_xlsx('data.xlsx')
+head(data1)
+```
+
+## 2. За допомогою download.file() завантажте файл getdata_data_ss06hid.csv за посиланням https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv та завантажте дані в R. Code book, що пояснює значення змінних знаходиться за посиланням https://www.dropbox.com/s/dijv0rlwo4mryv5/PUMSDataDict06.pdf?dl=0 Необхідно знайти, скільки property мають value $1000000+
+
+```{r}
+download.file('https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv', destfile = "./data2.csv")
+```
+```{r}
+data2=read.csv('data2.csv')
+head(data2)
+```
+```{r}
+  z=data2["VAL"] == 24
+  z=z[!is.na(z)]
+  cn=length(z[z == TRUE])
+cn
+```
+
+## 3. Зчитайте xml файл за посиланням
+## http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Frestaurants.xml
+## Скільки ресторанів мають zipcode 21231?
+```{r}
+data3=xmlTreeParse("http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Frestaurants.xml", useInternal=TRUE)
+rootNode=xmlRoot(data3)
+xmlName(rootNode)
+```
+
+```{r}
+rootNode[[1]][[1]]
+```
+
+```{r}
+sum(xpathSApply(xmlRoot(data3), "//zipcode", xmlValue)==21231)
+```
+
+

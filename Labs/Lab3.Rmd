@@ -1,0 +1,46 @@
+---
+title: "Lab3 by Daria Zavgorodnia"
+output:
+  html_document:
+    df_print: paged
+---
+
+ 
+
+```{r}
+library(rvest) 
+movies <- read_html("http://www.imdb.com/search/title?count=100&release_date=2017,2017&title_type=feature") 
+rank_data_html<-html_nodes(movies,'.text-primary') 
+rank_data <- html_text(rank_data_html) 
+rank_data<-as.numeric(rank_data)
+
+title_data_html <- html_nodes(movies,'.lister-item-header a') 
+title_data <- html_text(title_data_html)
+
+runtime_data_html <- html_nodes(movies,'.text-muted .runtime') 
+runtime_data <- html_text(runtime_data_html)
+```
+
+
+
+```{r}
+runtime_data<-gsub(" min","",runtime_data)
+runtime_data<-as.numeric(runtime_data)
+movies <- data.frame(Rank = rank_data, Title = title_data, Runtime = runtime_data, stringsAsFactors = FALSE )
+```
+
+1. Виведіть перші 6 назв фільмів датафрейму.
+
+```{r}
+head(movies['Title'], 6)
+```
+2.Виведіть всі назви фільмів с тривалістю більше 120 хв.
+
+```{r}
+movies[movies['Runtime'] > 120, ]['Title']
+```
+3.Скільки фільмів мають тривалість менше 100 хв.
+
+```{r}
+length(movies[movies['Runtime'] < 100, ]['Title'])
+```
